@@ -1,0 +1,73 @@
+
+###################################    hello-makefile_1.0.bb    ###################
+
+
+DESCRIPTION="recipe for Makefile"
+LICENSE="CLOSED"
+SRC_URI="file://hello.c \
+	file://Makefile"
+S="${WORKDIR}"
+do_compile(){
+	
+	cd ${S}
+	make
+
+}
+
+do_install(){
+	
+	install -d ${D}/usr/bin
+	install -m 777 ${S}/hello ${D}/usr/bin
+
+}
+
+
+######################## Makefile   #################
+
+all:hello.o
+	${CC} ${LDFLAGS} hello.o -o output
+hello.o:hello.c
+	${CC} ${LDFLAGS} -c hello.c
+clean:
+	rm -rf *.o output
+#######################################################
+how to write Makefile
+
+It is very common that a final bianry will be dependent on various source code and sourec headefiles
+
+dependenceies are important because they let make know about the source about the source for any target.
+
+dependencies are everything whose change requires recompiling the source code
+
+Maefile consists of rules with the following expression
+
+target:dependency1  dependency2  depedency3..........
+
+command
+
+
+dependency: is a file that is used as input to create the target (this could depend on several files)
+
+command: the command that make carries out to generate the target file
+
+
+example:
+
+1)driver.c	main driver program
+2)point.c	implementation for point code
+3)point.h	headerfile of point
+4)square.c 	implementation for square code
+5)square.h	headerfile for square
+
+
+all:driver.o	square.o	point.o
+	${CC} ${LDFLAGS} driver.o square.o point.o -o output
+driver.o:driver.c point.h square.h
+	${CC} ${LDFLAGS} -c driver.c
+square.o:square.c square.h
+	${CC} ${LDFLAGS} -c square.c
+point.o point.c point.h
+	${CC} ${LDFLAGS} -c point.c
+clean:
+	rm -rf *.o
+.PHONY: all clean
