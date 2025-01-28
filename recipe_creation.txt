@@ -1,0 +1,126 @@
+
+how to create recipe in yocto?
+
+step1: create the meta-layer 
+
+how to create meta-layer?
+
+under $poky dirctory
+
+source oe-init-build-env 
+
+then build dirctory will be created 
+
+under the build directory give following command
+
+$bitbake-layers --help
+
+$bitbake-layers create-layer meta-practice
+
+now move this meta-practice layer into your dirctory because this meta-practice layer is created in the build directory which is not permenant.
+
+mv meta-practice/ ../source/
+
+now add this meta-practice layer into the bblayer.conf which is under build/conf/bblayer.conf
+
+if we are not added this meta-practice layer into the bblayer.conf while your are bitbake your recipe eg:bitabake hello, it will through error NOTHING PROVIDES because while giving the bitbake it will start feting the source from the recipe you created, for that it required the path that path should be under the bblayer.conf from there it will fetch every thing and keep under WORK directory.
+
+the command to add layer
+
+bitbake-layers add-layer /home/anil/yocto/yoctotutor/sources/poky/source/meta-practice
+
+
+once created the meta-layer then by default it will create the following
+
+anil@anil-Inspiron-3501:~/yocto/yoctotutor/sources/poky/source/meta-practice$ tree
+.
+├── conf
+│   └── layer.conf
+├── COPYING.MIT
+├── README
+└── recipes-example
+    └── example
+        └── example_0.1.bb
+
+
+######################### HOW TO WRITE A RECIPE #########################
+
+DESCRIPTION=""
+LICENSE=""
+SRC_URI=""
+S="${WORKDIR}"
+do_compile(){
+
+}
+do_install(){
+
+
+}
+
+#########################################################################
+
+$/meta-parctice/recipes-core/hell0-c/hello_1.0.bb
+
+DESCRIPTION="recipe (bb) for hello c"
+LICENSE="CLOSED"   ######## your own source code means have to give CLOSED or any git repo menas it will change check the LICENSe in COPYING.MIT
+SRC_URI="file//:hello.c" ############## these are having the two types intranet and internet ,,,,,intranet means with in the host files loaction, internet means from git repo, or https
+S="${WORKDIR}"  ######  S means source when we give bitbake it will copy the all files into this directory with the help of SRC_URI to find the file location
+
+anil@anil-Inspiron-3501:~/yocto/yoctotutor/sources/poky/build/tmp/work/cortexa8hf-neon-poky-linux-gnueabi/helloC/1.0-r0$ ls
+
+configure.sstate   deploy-rpms               hello    helloC.spec  license-destdir  packages-split  pkgdata              pkgdata-sysroot  recipe-sysroot         source-date-epoch  temp
+debugsources.list  deploy-source-date-epoch  hello.c  image        package          patches         pkgdata-pdata-input  pseudo           recipe-sysroot-native  sysroot-destdir
+
+that is the WORKDIRECTOTY that hello.c is copied into this directory 
+
+do_compile(){
+
+	cd ${S}  ########## change the directory S=${WORKDIR} means the above diectory
+	${CC} ${LDFLAGS} hello.c -o hello    ############${CC} means cross compilation this will be known based on architecture you selected in the layer.conf whic is under $build/conf/layer.conf
+								if ${LDFLAGS} are not given means do_qa()  will occur finally hello binary will be generated you can observe in the above directory.
+}
+
+follow the syntax carefully with the curly braces as it is 
+
+
+do_install(){
+
+	intall -d ${D}/usr/bin
+	install -m 777 ${S}/hello ${D}/usr/bin
+}
+
+
+
+anil@anil-Inspiron-3501:~/yocto/yoctotutor/sources/poky/build/tmp/work/cortexa8hf-neon-poky-linux-gnueabi/helloC/1.0-r0/image/usr/bin$ ls
+hello
+
+here D means destination to install binary image 
+
+in the above directory upto image is the D Destination directory after that we mentioned /usr/bin based on the file we can mention that /usr/lib also 
+
+The command install is a standard utility in Linux and Unix-like systems, used to copy files while ensuring that certain attributes (like permissions) are set correctly. In Yocto, it’s typically used inside do_install() to install compiled binaries, libraries, configuration files, etc., into the target directory structure.
+
+Breakdown of install in do_install():
+
+
+The basic syntax for the install command used in the Yocto do_install() function is:
+
+
+install -d <destination>      ################ d   is the destination path
+
+
+example:
+
+do_install() {
+    # Create the directory in the target system where the binary will be installed
+    install -d ${D}${bindir}
+
+    # Copy the compiled binary to the target directory
+    install mypackage ${D}${bindir}
+
+    # Optionally, create a symlink
+    ln -s ${bindir}/mypackage ${D}${bindir}/mypkg
+}
+
+
+install <source-file> <destination>
