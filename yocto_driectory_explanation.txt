@@ -1,0 +1,361 @@
+anil@anil-Inspiron-3501:~/yocto/yoctotutor/sources/poky$ ls
+
+1.txt    build    documentation  LICENSE               LICENSE.MIT     Makefile  meta       meta-selftest  meta-yocto-bsp    oe-init-build-env   README.md          README.poky.md  scripts      source
+bitbake  contrib  hello.txt      LICENSE.GPL-2.0-only  MAINTAINERS.md  MEMORIAM  meta-poky  meta-skeleton  my-changes.patch  README.hardware.md  README.OE-Core.md  README.qemu.md  SECURITY.md
+
+these are the directories contains the***********POKY******** dirctory
+
+in this 1.bitabke
+	2.build
+	3.documentation
+	4.LICENSE
+	5.meta
+	6.meta-poky
+	7.meta-yocto-bsp
+	8.oe-init-build-env
+	9.README
+	10.scripts
+	
+what bitbake will do?
+
+In Yocto, Bitbake is a build tool that automates the process of building software packages and images for embedded systems. It uses recipes and metadata to figure out how to build a system from source code, manage dependencies, and ultimately create the final output, such as a bootable image or specific software package.
+
+Here’s what Bitbake does:
+
+Parsing Recipes: Bitbake reads recipes (which are usually .bb or .bbclass files) that define how a package should be built. Recipes contain information about the package, such as source code locations, dependencies, build steps, and installation instructions.
+
+Dependency Management: Bitbake automatically resolves dependencies between recipes. If one package depends on another, Bitbake ensures the necessary packages are built in the correct order.
+
+Task Execution: Bitbake breaks the build process into various tasks (e.g., fetching source code, compiling, packaging, and installing). It executes these tasks, making sure that each step is done in the correct sequence and only once if it’s not needed again.
+
+Parallel Builds: Bitbake can execute multiple tasks in parallel to speed up the build process, making it more efficient.
+
+Customizable Build Configuration: Bitbake works with configuration files (like local.conf, bblayers.conf) to specify things like the target machine, build options, and other environment settings.
+
+Output Generation: After Bitbake processes all the tasks and dependencies, it produces the desired output—whether that’s a bootable image (e.g., a .sdimg or .iso file), or individual packages like .rpm or .deb files.
+
+
+what is build?
+
+In Yocto, a build refers to the process of compiling and assembling all the components needed to create a custom Linux distribution or embedded system image. This process involves fetching source code, applying patches, compiling binaries, packaging software, and ultimately creating a bootable image or set of packages that can be deployed to a target device.
+
+Here’s a breakdown of what happens during a Yocto build:
+
+Configuration:
+
+You define the configuration of your build environment using files like local.conf, bblayers.conf, and others. These files specify things like the target architecture, the set of layers to use, and various build options.
+Recipe Parsing:
+
+Yocto uses recipes (files with .bb extension) to define how each piece of software should be built. These recipes include information about where to get the source code, how to configure and compile it, and how to install it.
+Fetching Sources:
+
+Yocto downloads the source code for the software packages defined in the recipes. This can include pulling code from Git repositories, tarballs, or other source archives.
+Building:
+
+Bitbake (the Yocto build tool) takes over at this point and executes a series of tasks for each recipe, such as:
+Fetching the source code (if not already cached).
+Unpacking and applying patches.
+Configuring the build environment for each package.
+Compiling the software.
+Installing compiled binaries and libraries.
+Image Creation:
+
+The build system combines all the built packages into a target-specific image, which can be a bootable image for your device (e.g., .iso, .sdimg) or individual installable packages (e.g., .deb, .rpm).
+Package Management:
+
+If you're building an image, Yocto can also create package archives that contain the software and libraries in formats like .ipk, .rpm, or .deb, which can then be installed on your target system.
+Output:
+
+The final output of a Yocto build is a set of files that are ready to be deployed to your embedded device. This might include a bootable image, kernel modules, device tree files, or other system files.
+
+
+what LICENSE contains?
+
+In Yocto, the LICENSE variable is used within recipes to specify the licensing information for the software being built. It indicates under which license the software package or component is distributed and used. This helps in ensuring legal compliance and proper attribution when distributing or using open-source software.
+
+Yocto uses SPDX (Software Package Data Exchange) license identifiers to standardize license names. Examples include:
+GPL-2.0: GNU General Public License, version 2.
+MIT: Massachusetts Institute of Technology License.
+Apache-2.0: Apache License 2.0.
+LGPL-2.1: GNU Lesser General Public License, version 2.1.
+
+	
+what meta contins?
+
+classes  COPYING.MIT  lib          recipes-connectivity  recipes-devtools  recipes-extended  recipes-graphics  recipes-multimedia  recipes-sato     recipes.txt  source
+conf     files        recipes-bsp  recipes-core          recipes-example   recipes-gnome     recipes-kernel    recipes-rt          recipes-support  site
+
+
+classes :
+
+In the Yocto Project, the meta directory (also called the "meta-layer") is a key component that houses a variety of resources such as recipes, configurations, and classes that are used to define and manage the build environment and the target system. Specifically, the classes under meta provide a way to modularize the build process and share common functionality across different recipes.
+
+Here are some of the common classes that can be found in the meta directory, or layers built on top of meta, which extend and provide functionality for the Yocto build system:
+
+Common Yocto Classes
+base.bbclass:
+
+This is a core class in Yocto that provides essential functionality for building software. It's typically included in most recipes.
+It includes default functions for handling fetching, unpacking, patching, and compiling source code.
+cmake.bbclass:
+
+Provides functions for handling projects that use CMake as a build system.
+It automates steps like configuring and compiling CMake-based projects.
+autotools.bbclass:
+
+For recipes that use Autotools (like ./configure, make, make install).
+It simplifies the handling of the configure/make/build process for software that follows this convention.
+qemu.bbclass:
+
+Adds support for building and running packages in a QEMU (emulator) environment.
+This class is often used to emulate the target system for testing purposes before deployment to real hardware.
+kernel.bbclass:
+
+Used for building the Linux kernel.
+It handles tasks related to configuring, compiling, and installing the kernel for a specific machine.
+rpm.bbclass:
+
+Provides support for creating RPM packages.
+It’s used when building software to be packaged in the RPM format.
+deb.bbclass:
+
+Similar to rpm.bbclass, but used to build DEB packages for systems that use Debian-based package managers.
+image.bbclass:
+
+This class is used for creating a full image (e.g., SD card image, ISO, etc.) from the individual packages and components that have been built.
+It contains functionality for adding extra files to the image, generating the bootloader, etc.
+python.bbclass:
+
+Provides helpers for handling Python packages and dependencies.
+It can simplify the process of managing Python versions, virtual environments, and Python modules.
+elf.bbclass:
+
+Used for handling ELF (Executable and Linkable Format) binaries.
+This class provides utilities for manipulating ELF files, often as part of building system binaries.
+insane.bbclass:
+This class provides the insane check functionality, which runs a series of sanity checks on the recipes during the build process to ensure that the recipes are correctly defined and comply with Yocto guidelines.
+native.bbclass:
+This class is used for native packages, which are tools or utilities that are built and used during the build process (e.g., compilers, build tools).
+It's often used for packages that should be built on the host system rather than the target system.
+
+
+what is LAYER in yocto?
+
+Layers in Yocto
+In Yocto, the concept of layers is essential to the build system. A layer is a collection of recipes, classes, and configuration files that define a certain part of the system or a specific functionality. The meta layer is often used as the foundational layer, but there can be multiple other layers in a Yocto project, including:
+
+meta-openembedded: Contains a large collection of additional recipes for a variety of open-source software and tools.
+meta-yocto: Contains Yocto-specific configurations and classes.
+meta-toolchain: Provides recipes to build SDKs and cross-compilation toolchains.
+meta-machine: Contains machine-specific configurations.
+
+
+what is recipe in yocto?
+
+In Yocto, a recipe is a file that defines how a specific software package or component should be built, fetched, configured, compiled, and installed. It serves as a blueprint for the Yocto build system (using Bitbake) to create the package, image, or software component that is part of a larger embedded Linux distribution.
+
+A Yocto recipe typically consists of a .bb (bitbake) file, but it can also include other metadata files such as .bbappend files (for appending changes to existing recipes) and .inc files (which are included in other recipes for common configuration).
+
+Key Components of a Yocto Recipe
+A typical Yocto recipe contains the following key components:
+
+Metadata Variables:
+
+These variables provide essential information about the software and how it should be built. Some common metadata variables include:
+NAME: The name of the package (e.g., glibc, busybox).
+VERSION: The version of the package (e.g., 1.2.3).
+SRC_URI: The location from which to fetch the source code (e.g., a Git repository, tarball, etc.).
+LICENSE: The license(s) under which the software is distributed (e.g., GPL-2.0, MIT).
+DEPENDS: The other software packages or libraries that the current package depends on to build.
+Source Fetching:
+
+The SRC_URI variable specifies where the source code for the package should be fetched from. It could point to a URL, Git repository, or even a local file. Yocto supports different protocols like HTTP, FTP, Git, and more.
+bash
+Copy
+SRC_URI = "http://example.com/downloads/mysoftware-1.2.3.tar.gz"
+Fetch and Unpack:
+
+Yocto has built-in tasks for fetching the source code (using tools like wget, git, etc.) and unpacking it (for example, extracting a tarball).
+Build Instructions:
+
+Recipes define how the software should be built. This includes tasks such as configuring, compiling, and installing the software. The build process is often automated through common classes (e.g., autotools.bbclass, cmake.bbclass).
+The recipe can specify things like:
+Configure the build (e.g., using ./configure for Autotools).
+Build the software (e.g., using make or ninja).
+Install the software (e.g., using make install).
+Package Creation:
+
+After the software is built and installed, a recipe will create package(s) in formats like .ipk, .deb, or .rpm. These are the files that will be distributed or deployed.
+For example:
+bash
+Copy
+do_install() {
+    # Custom install steps
+    install -d ${D}${bindir}
+    install myprogram ${D}${bindir}
+}
+Patches:
+
+Recipes can specify patches that need to be applied to the source code before or during the build process. The PATCHES variable or SRC_URI can include patch files to fix bugs, apply security fixes, or add custom modifications to the code.
+bash
+Copy
+SRC_URI += "file://mypatch.patch"
+Task Definitions:
+
+A recipe can define different tasks that Yocto will execute during the build process. These tasks are standard build steps such as do_fetch, do_unpack, do_patch, do_configure, do_compile, do_install, etc.
+You can also define custom tasks if needed.
+bash
+Copy
+do_compile() {
+    oe_runmake
+}
+Dependencies:
+
+Recipes can declare build-time or runtime dependencies on other packages. For example, a recipe that builds software using Autotools might depend on autoconf and automake.
+bash
+Copy
+DEPENDS = "autoconf automake"
+Final Output:
+
+The final product of a recipe is typically a software package (e.g., .ipk, .deb, .rpm) or a component of the image, such as a kernel module or a library. Recipes can be used to produce one or more artifacts.
+Example of a Simple Recipe
+Here’s a simplified example of what a Yocto recipe might look like:
+
+bash
+Copy
+# Example: mypackage_1.0.bb
+
+SUMMARY = "My Example Package"
+DESCRIPTION = "This is an example package for Yocto."
+LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=somechecksumvalue"
+
+SRC_URI = "http://example.com/mypackage-1.0.tar.gz"
+
+# Dependencies
+DEPENDS = "libtool"
+
+# Build instructions
+do_compile() {
+    oe_runmake
+}
+
+do_install() {
+    install -d ${D}${bindir}
+    install myprogram ${D}${bindir}
+}
+
+# Files to package
+FILES_${PN} = "${bindir}/myprogram"
+Recipe File Extensions
+.bb: The main recipe file extension (Bitbake file) containing the instructions for building a package.
+.bbappend: Used to append additional changes to an existing recipe (for example, from another layer).
+.inc: A recipe include file that can contain common settings or definitions shared across multiple recipes.
+Yocto Recipe Task Flow
+The Yocto build process with Bitbake typically follows this sequence of tasks for a recipe:
+
+do_fetch: Download the source code (from SRC_URI).
+do_unpack: Extract or unpack the source code.
+do_patch: Apply any patches defined in SRC_URI or PATCHES.
+do_configure: Configure the package (e.g., running ./configure).
+do_compile: Compile the software (e.g., using make or ninja).
+do_install: Install the compiled binaries and other resources into the image.
+do_package: Package the installed files into a distributable package (e.g., .ipk, .rpm).
+do_populate_sysroot: Populate the sysroot for cross-compiling.
+
+
+what is poky and meta-poky?
+Poky = The complete Yocto build system framework.
+meta-poky = A meta-layer that provides the core configuration and recipes for the Yocto build system.
+
+In Yocto, Poky and meta-poky are crucial components of the build system and play specific roles in organizing and managing the Yocto environment.
+
+1. Poky
+Poky is the reference build system for the Yocto Project. It is essentially a set of recipes, configuration files, and layers that provide the foundation for building custom embedded Linux distributions. Poky contains the core components necessary for creating a Yocto-based system, and it is maintained by the Yocto Project.
+
+Poky includes the following major components:
+Bitbake: The task executor and build tool used by Yocto.
+OpenEmbedded Core (OE-Core): A collection of essential recipes, configuration files, and tools to build a Linux-based system.
+Yocto-specific configurations and metadata: Files like local.conf and bblayers.conf that define the build environment.
+What does Poky provide?
+A reference distribution: Poky provides the basic setup for building a Linux distribution. It is not a full-fledged Linux distribution but a minimal system that you can customize.
+Meta-layer: It includes the meta-poky layer, which provides essential configurations and metadata for Yocto.
+Foundation for customization: You can add additional layers to Poky to customize it for a particular hardware platform, application, or package requirements.
+In short, Poky is the core starting point or reference implementation of Yocto, which includes necessary components to build a custom embedded Linux system. It is the base on which users can extend or create their own distributions.
+
+2. meta-poky
+meta-poky is a meta-layer within the Poky build system. This layer provides Yocto-specific configurations, metadata, and recipes that are necessary for the build environment.
+
+What does meta-poky do?
+It provides essential recipes and configurations for building basic components of the system.
+It includes machine configurations, distribution configurations, and other metadata to enable basic build functionality for a Yocto-based system.
+It is often considered the "core" layer that defines how Yocto builds and configures a generic embedded system, though additional layers can be added to add more functionality.
+Key Features of meta-poky:
+Machine and Architecture Configurations: It includes configuration files for common hardware platforms (machines), defining how the build should be tailored for different architectures.
+Basic Recipes: Recipes for essential system components like the bootloader, kernel, and other low-level components.
+Build Tools and Classes: Contains classes and configuration files that define how to build essential tools and packages, such as the C library (glibc) or essential development tools.
+Default Distribution Configuration: The meta-poky layer also provides a default configuration for the build system, such as the default target root filesystem and default set of packages for the build.
+Example of meta-poky Structure:
+Here’s what you might typically find in the meta-poky directory structure:
+
+bash
+Copy
+meta-poky/
+├── conf/
+│   ├── layer.conf           # Layer configuration for meta-poky
+│   └── poky.conf            # Yocto-specific configurations
+├── recipes-core/
+│   ├── busybox/
+│   ├── glibc/
+│   └── linux/
+├── classes/
+│   ├── image.bbclass
+│   └── toolchain.bbclass
+└── meta-poky.conf           # Configuration for the Poky build system
+Summary: Difference between Poky and meta-poky
+Poky is the entire build system that serves as the foundation for Yocto. It includes essential build tools (like Bitbake), core components (OE-Core), and default configurations, making it a complete starting point for building embedded Linux distributions.
+
+meta-poky is a meta-layer within Poky. It contains configuration files, recipes, and metadata specific to the Poky reference build environment. It helps define machine configurations and the default system environment for building a Yocto-based system.
+
+
+what is meta-yocto-bsp?
+
+anil@anil-Inspiron-3501:~/yocto/yoctotutor/sources/poky$ ls meta-yocto-bsp/
+conf  lib  README.hardware.md  recipes-bsp  recipes-graphics  recipes-kernel  wic
+
+
+
+The meta-yocto-bsp layer in the Yocto Project is a special layer that contains Board Support Packages (BSPs) for a variety of reference and supported hardware platforms. BSPs are the software support necessary to get a particular hardware platform or board running with a Yocto-based Linux system. This layer provides the specific configuration, drivers, kernel, and device support needed for particular hardware.
+
+
+
+what oe-init-build-env:
+
+
+How to use oe-init-build-env:
+Running the Script: The oe-init-build-env script is typically located in the yocto or poky directory (the root of your Yocto project). To run it, use the following command:
+
+bash
+Copy
+source oe-init-build-env [optional-build-dir]
+source: This command is used to run the script in the current shell session (important because it modifies environment variables in the shell you're working in).
+[optional-build-dir]: This argument is optional. If you don't specify it, the script will create a default build directory called build. If you want to specify a custom build directory, you can provide the name (e.g., source oe-init-build-env mybuilddir).
+What Happens When You Run the Script? After running the script, several things occur:
+
+Environment Setup: It sets environment variables that are required for the Yocto build process. These variables define the paths for where the build files, source code, and output will be located.
+Creates the Build Directory: If you don’t specify a build directory, the script will create a build directory in your current working directory (if it doesn’t already exist).
+Initializes Configuration Files: It sets up default configuration files in the build directory:
+conf/local.conf: This file contains local build configurations such as the target machine, the number of threads for parallel builds, and the output directory.
+conf/bblayers.conf: This file defines the layers that are available in the build environment, which is crucial for determining which metadata Yocto will use during the build.
+Environment Variables: It ensures that environment variables like OECORE_DIR, BBPATH, BB_ENV_EXTRAWHITE, and others are set to the correct values, pointing to the appropriate directories for recipes, layers, and configuration files.
+Default Build Directory (build): If you don't specify a build directory, the script will use build as the default. Here’s how the directory structure typically looks after running oe-init-build-env:
+
+bash
+Copy
+build/
+├── conf/
+│   ├── bblayers.conf     # Specifies layers to include in the build
+│   └── local.conf        # Contains local build configurations
+├── tmp/                  # Temporary files and build output
+├── meta-<layer>          # Layers that are included in the build (e.g., meta-poky, meta-openembedded)
+└── (Other generated files)
