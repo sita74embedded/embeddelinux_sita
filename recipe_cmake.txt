@@ -1,0 +1,110 @@
+
+###################################### hi-cmake_1.0.bb #############################################################
+
+DESCRIPTION="a recipe for cmake"
+LICENSE="CLOSED"
+SRC_URI="file://hi.cpp \
+	file://CMakeLists.txt"
+S="${WORKDIR}"
+
+inherit cmake
+ 
+do_compile(){
+	
+	cd ${S}
+	mkdir -p build
+	cd build
+	cmake ..
+	make
+
+}
+
+do_install(){
+	
+	install -d ${D}/usr/bin
+	install -m 777 ${S}/hi ${D}/usr/bin
+
+}
+
+###############################################################   steps involed in cmake ############################
+
+step1 : vim hi.cpp
+
+step2 : vim CMakeLists.txt
+
+how to write CMakeLists.txt
+
+CMake is a cross platform build system generator taht helps you manage the build process of your s/w project.
+It is widely used in C++ and other languages ti define how a project should be built in a portable way.
+
+
+Basic concepts of cmake:
+
+
+CMakeLists.txt::: This is the main file cmake uses to configure the build system, it contains the instructions for building project
+
+cmake commands:::   These are used to specify how to compile , link and manage your project such as
+						project()
+						add_executable()
+						target_link_libraries() etc.....
+The minimu cmake file
+
+lets start with a basic example where we only one source file main.cpp
+
+and we want to generate an executable
+
+PROJECT STRUCTURE:
+
+/myproject
+	/CMakeLists.txt
+	/main.cpp
+
+CMakeLists.txt
+
+#specify the minimum required version of cmake
+
+cmake_minimum_required(VERSION 3.10)    //this line specifies the minimum version of cmake required to build the project
+
+#define the name of the project
+
+project(myproject VERSION 1.0 LANGUAGES CXX)  //defines the project ame(myproject),version and language (CXX for C++)
+
+#Add an executable target
+
+add_executable(my_output main.cpp)    //this creates an executable named my_output from the sourece file main.cpp
+
+
+
+COMPILING AND BUILDING:
+
+makdir build
+
+cd build
+
+#cmake usually requires you to build from a seperate directory to keep the source tree clean
+
+#Running Cmake: generate the build system file (Eg:Makefiles etc..)
+
+now run ######## cmake .. ############ in build dirctory
+
+#building the project: once cmake generates the build files , you can actaully build the project with the following command
+
+now run ################## make #####################
+
+summamry:
+
+$/ makdir myproject
+$/ cd myproject
+
+	vim main.cpp
+	vim CMakeLists.txt
+mkdir build
+cd build
+	cmake ..
+	make
+
+#now we can find the my_output final executable	
+
+
+
+
