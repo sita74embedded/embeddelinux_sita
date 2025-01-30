@@ -1,0 +1,173 @@
+##################### helloworld-conf_1.0.bb ##################
+
+DECRIPTION="recipe for helloworld conf"
+LICENSE="CLOSED"
+SRC_URI="file://configure.ac \
+        file://helloworld.c \
+        file://Makefile.am \
+        file://Readme.txt \
+"
+inherit autotools
+
+S="${WORKDIR}"
+
+do_configure(){
+        cd ${S}
+        autoreconf --install --force
+        ./configure --prefix=/usr --host=arm-poky-linux-gnueabi
+}
+do_compile(){
+        cd ${S}
+        make
+
+}
+do_install(){
+        install -d ${D}/usr/lib
+        install -m 755 ${S}/helloworld ${D}/usr/lib
+}
+FILES:${PN} += "/usr/lib/helloworld"
+
+
+
+######################## vim configure.ac #########################
+
+# Must init the autoconf setup
+# The first parameter is project name
+# second is version number
+# third is bug report address
+AC_INIT([helloworld], [1.0])
+
+# Safety checks in case user overwritten --srcdir
+AC_CONFIG_SRCDIR([helloworld.c])
+
+# Store the auxiliary build tools (e.g., install-sh, config.sub, config.guess)
+# in this dir (build-aux)
+AC_CONFIG_AUX_DIR([build-aux])
+
+# Init automake, and specify this program use relaxed structures.
+# i.e. this program doesn't follow the gnu coding standards, and doesn't have
+# ChangeLog, COPYING, AUTHORS, INSTALL, README etc. files.
+AM_INIT_AUTOMAKE([-Wall -Werror foreign])
+
+# Check for C compiler
+AC_PROG_CC
+# We can add more checks in this section
+
+# Tells automake to create a Makefile
+# See https://www.gnu.org/software/automake/manual/html_node/Requirements.html
+AC_CONFIG_FILES([Makefile])
+
+# Generate the output
+AC_OUTPUT
+
+
+############################ vim Makefile.am ######################################
+
+bin_PROGRAMS = helloworld
+helloworld_SOURCES = helloworld.c
+
+#########################  Readme.txt ##########################################
+
+Ref:
+        https://www.idryman.org/blog/2016/03/10/autoconf-tutorial-1/
+
+how to compile:
+**************
+autoreconf --force --install --verbose
+./configure
+make
+make install DESTDIR="${PWD}/gar"
+
+Note: make install will install bins in host pc so give other path
+
+
+
+
+CROSS COMPILE for ARM:
+**********************
+add your toolchain to configure file
+        ./configure --host=arm-linux-gnueabi
+
+
+e.g:
+
+autoreconf --force --install --verbose
+./configure --host=arm-linux-gnueabi
+make
+make install DESTDIR="${PWD}/gar"
+
+#################### helloworld.c ##################
+
+
+#include<stdio.h>
+
+int main()
+{
+        printf("hello world\n");
+        return 0;
+
+}
+
+
+
+
+################################  steps to follow for conf file ###################
+
+A configure file (often configure or configure.ac) is typically used in autotools or GNU Autoconf projects to automatically detect system settings and configurations, and to generate appropriate Makefiles for compiling software on different systems.
+
+step1:
+
+$ sudo apt-get install autoreconf
+
+step 2:
+$mkdir helloworld
+$cd helloworld
+
+vim hello.c
+
+#include<stdio.h>
+int main()
+{
+	printf("hello world...\n");
+}
+
+
+step 3:
+
+vim configure.ac
+
+AC_INIT([sourcefilename],[version],[your@gmail.com])
+AC_INIT_AUTOMAKE([-Wall -Werror foriegn])
+AC_PROG_CC
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT
+
+
+eg:
+
+AC_INIT([hello],[1.0],[example@gmail.com])
+AM_INIT_AUTOMAKE([-Wall -Werror foriegn])
+AC_PROG_CC
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT
+
+
+
+step 4:
+vim Makefile.am
+
+bin_programs = helloworld_output
+helloworld_SOURCES= helloworld.c
+
+step 4:
+
+$autoreconf -i
+ 
+step 5:
+
+$ ./configure
+
+step 6:
+
+$ make
+  
