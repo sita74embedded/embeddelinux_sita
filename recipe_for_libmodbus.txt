@@ -1,0 +1,73 @@
+DESCRIPTION="recipe for libmodbus"
+
+LICENSE="GPLv2"
+LIC_FILES_CHKSUM="file://COPYING.LESSER;md5=4fbd65380cdd255951079008b364516c"
+SRC_URI="git://github.com/stephane/libmodbus.git;protocol=https"
+SRCREV="f9358460ee1f62bcac716ad0444b3bbe7628b204"
+
+S="${WORKDIR}/git"
+
+inherit autotools
+
+do_configure(){
+        cd ${S}
+        ./autogen.sh
+        ./configure --prefix=/usr --host=arm-poky-linux-gnueabi
+
+}
+do_compile(){
+        cd ${S}
+        make
+
+}
+do_install(){
+        cd ${S}
+        make install DESTDIR="${D}"
+}
+
+
+
+##############################################################
+
+libmodbus is also configured based file
+
+
+step1: create one garbage file
+$ mkdir gar
+$ cd gar
+$ git clone https://github.com/stephane/libmodbus.git   ////search libmodbus git
+$ cd libmodbus
+$ ls
+$ vim COPYING.LESSER
+
+in this we can get LICENSE = GPLV2
+
+anil@anil-Inspiron-3501:~/libmodbus_gar/libmodbus$ md5sum COPYING.LESSER 
+4fbd65380cdd255951079008b364516c  COPYING.LESSER
+
+now we got the CHKSUM
+ 
+LIC_FILES_CHKSUM="file://COPYING.LESSER;md5=4fbd65380cdd255951079008b364516c"
+
+SRC_URI="https://github.com/stephane/libmodbus.git;protocol=https"  //this we will from git repo code copy and paste here
+
+SRC_REV="f9358460ee1f62bcac716ad0444b3bbe7628b204"
+
+//this SRC_REV will get 
+git tag
+git checkout v3.1.4
+git log
+take the first commit then we get SRC_REV
+
+
+
+S="${WORKDIR}/git"   //we have to give git because its from internet
+
+do_configure(){
+        cd ${S}
+        ./autogen.sh
+        ./configure --prefix=/usr --host=arm-poky-linux-gnueabi //this tool chain will get from~/yocto/yoctotutor/sources/poky/build/tmp/work/cortexa8hf-neon-poky-linux-gnueabi/hello/1.0-r0/temp
+														vim run.do_compile
+														search for do_compile there we get toolchain
+
+}
