@@ -1,0 +1,63 @@
+DESCRIPTION = "simple .bb file for libruary"
+LICENSE ="CLOSED"
+SRC_URI = "file://main.c \
+        file://myfun.c \
+        file://hello.h \
+        file://Makefile"
+
+S="${WORKDIR}"
+
+do_compile(){
+        cd ${S} ${LDFLAGS} ${CFLAGS}
+        make
+}
+do_install() {
+        install -d ${D}/usr/lib
+        install -m 777 ${S}/libhello.so ${D}/usr/lib/libhello.so.1
+        ln -sf libhello.so.1 ${D}/usr/lib/libhello.so
+}
+
+
+#########################################
+
+vim main.c
+
+
+#include<stdio.h>
+#include"header.h"
+int main()
+{
+	char a[10]="hello"
+	print(a);
+}
+
+vim hello.c
+
+void hello(char *a)
+{
+	printf(a);
+}
+
+
+vim header.h
+
+void print(char *)
+
+
+
+###################### SOFT LNK ############################
+
+A symbolic link also called a symlink is a type of file that contains a reference to another file or directory
+
+The symbolic link and symlink points to the arget file by its path
+
+It behaves like a shortcut or alias to another file or deirectory on different file systems
+
+if the target file or directoryis deleted or moved , the symbolic link will break and become "dangling" (it points to a location that no longer exists)
+
+synatx:: ln -s source destination
+ls -li filename.sh
+
+ls -s /home/xxx/xxx1/hello.txt		/home/yyy/yyy1/dummy
+
+
