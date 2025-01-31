@@ -1,0 +1,120 @@
+
+1)	= 	Simple Assignment – Directly assigns a value, overwriting any previous value.
+
+2)	+=	Append Assignment – Appends a value to an existing value.
+
+3)	:= 	Immediate Assignment – Expands and assigns immediately.
+
+4)	?= 	Conditional Assignment – Assigns only if the variable isn’t already set.
+
+5)	=: 	Append if Set – Appends a value if the variable is already set.
+
+
+1. Simple Assignment (=)
+This is the most basic assignment operator. It sets a variable to a specific value and overwrites any existing value.
+
+eg:# Simple assignment to a variable
+SRC_URI = "http://example.com/my-source.tar.gz"
+# The SRC_URI variable now points to the source file at the given URL.
+
+SRC_URI = "http://another-source.com/another-source.tar.gz"
+# The SRC_URI variable is now overwritten with the new URL.
+
+2. Append (+=)
+This operator appends a value to an existing variable. It’s typically used when you want to add something to a list or path.
+
+eg:# Initial SRC_URI
+SRC_URI = "http://example.com/my-source.tar.gz"
+
+# Append an additional file to the SRC_URI
+SRC_URI += " http://example.com/extra-file.tar.gz"
+# SRC_URI is now "http://example.com/my-source.tar.gz http://example.com/extra-file.tar.gz"
+
+This is useful for adding more files or patches to the SRC_URI variable. You don't overwrite the value, but rather extend it.
+
+3. Immediate Assignment (:=)
+This assigns a value immediately and evaluates it right away. In Yocto, it's useful when you need to evaluate a variable immediately as part of the assignment.
+
+# Assigning immediately and expanding a variable
+DEPLOY_DIR := "${TOPDIR}/deploy"
+# The value of DEPLOY_DIR is immediately set to the path created by expanding ${TOPDIR}/deploy.
+
+The := operator ensures that ${TOPDIR} is expanded immediately, so if you do this:
+
+TOPDIR = "/home/user/yocto"
+DEPLOY_DIR := "${TOPDIR}/deploy"
+DEPLOY_DIR will immediately become "/home/user/yocto/deploy".
+
+
+4. Assign if Undefined (?=)
+This operator assigns a value only if the variable has not been set already. If the variable already has a value, it won't be overwritten.
+
+# This will only assign a value if the variable is not set
+EXTRA_OECONF ?= "--enable-feature-x"
+# If EXTRA_OECONF is not set yet, it gets "--enable-feature-x".
+
+This is useful for setting default values in recipes or configuration files, ensuring that the variable doesn’t get overwritten by other layers or configurations.
+
+
+5. Suffix Assignment (=:)
+This operator adds a suffix to a variable, but only if the variable already has a value. It’s like appending, but with a check that the variable must already exist.
+
+# Assign initial value
+EXTRA_OECONF = "--enable-feature-y"
+# Now add a suffix to it
+EXTRA_OECONF =: " --enable-feature-x"
+# EXTRA_OECONF is now "--enable-feature-y --enable-feature-x"
+
+The variable EXTRA_OECONF originally has the value --enable-feature-y. The =: operator adds --enable-feature-x only if EXTRA_OECONF is already set.
+
+
+
+:append
+
+Name: Append Operation
+Purpose: The :append operation adds a value to the end of an existing variable’s value.
+How it works: It takes whatever value is currently in the variable and appends the new value at the end of it, separated by a space (by default).
+Common use case: This is often used when you want to add additional paths or flags to an existing list of values, like SRC_URI, EXTRA_OECONF, or IMAGE_INSTALL.
+
+Example of :append:
+
+EXTRA_OECONF = "--enable-feature-x"
+EXTRA_OECONF:append = " --enable-feature-y"
+
+After this, EXTRA_OECONF will be:
+
+EXTRA_OECONF = "--enable-feature-x --enable-feature-y"
+
+
+
+2. :prepend
+Name: Prepend Operation
+Purpose: The :prepend operation adds a value to the beginning of an existing variable’s value.
+How it works: It takes whatever value is currently in the variable and prepends the new value to the front of it, separated by a space (by default).
+Common use case: This is useful when you need to add something before existing paths or flags, like prepending directories to PATH, adding dependencies at the start of the list, or setting a higher priority for certain values.
+
+DEPENDS = "libfoo"
+DEPENDS:prepend = "libbar "
+
+After this, DEPENDS will be:
+
+DEPENDS = "libbar libfoo"
+
+
+3. :remove
+Name: Remove Operation
+Purpose: The :remove operation removes a specific value or set of values from a variable.
+How it works: It searches for the specified value and removes it from the variable. If the value is present multiple times, it will remove all occurrences.
+Common use case: This is often used to remove unwanted paths or flags from variables like IMAGE_INSTALL, DEPENDS, or any other list of items.
+
+Example of :remove:
+
+IMAGE_INSTALL = "myapp extra-package"
+IMAGE_INSTALL:remove = "extra-package"
+
+After this, IMAGE_INSTALL will be:
+
+IMAGE_INSTALL = "myapp"
+
+
+
