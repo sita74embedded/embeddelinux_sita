@@ -1,0 +1,114 @@
+step1: create your own board
+
+/home/anil/embedded_linux/yoctotutor/viyara-imx-uboot/board/sita
+
+step 2:
+
+/home/anil/embedded_linux/yoctotutor/viyara-imx-uboot/board/sita/sita-6ull-14x14
+
+step 3: copy all the files from anil@anil-Inspiron-3501:~/embedded_linux/yoctotutor/viyara-imx-uboot/board/myir/mys-6ull-14x14$ ls
+
+
+common  imximage.cfg  imximage_lpddr2.cfg  Kconfig  MAINTAINERS  Makefile  mys-6ull-14x14.c  plugin.S  README
+
+to your /home/anil/embedded_linux/yoctotutor/viyara-imx-uboot/board/sita/sita-6ull-14x14
+ 
+
+
+NOTE: common is the directory copied from the /home/anil/embedded_linux/yoctotutor/viyara-imx-uboot/ to /home/anil/embedded_linux/yoctotutor/viyara-imx-uboot/board/sita/sita-6ull-14x14
+
+if common directory is not copied will get errors of header file
+
+
+########################## modify the imximage.cfg file ##########################################
+step 4: anil@anil-Inspiron-3501:~/embedded_linux/yoctotutor/viyara-imx-uboot/board/sita/sita-6ull-14x14$ vim imximage.cfg 
+
+PLUGIN  board/sita/sita-6ull-14x14/plugin.bin 0x00907000 //modify this line according to your board
+
+
+######################### modify the Kconfig file ####################################
+
+step 5: anil@anil-Inspiron-3501:~/embedded_linux/yoctotutor/viyara-imx-uboot/board/sita/sita-6ull-14x14$ vim Kconfig 
+
+if TARGET_SITA_6ULL_14X14
+
+config SYS_BOARD
+        default "sita-6ull-14x14"
+
+config SYS_VENDOR
+        default "sita"
+
+config SYS_CONFIG_NAME
+        default "sita-6ull-14x14"
+
+config SYS_TEXT_BASE
+        default 0x87800000
+endif
+
+############################## modify the Makefile ##################################
+step 6: anil@anil-Inspiron-3501:~/embedded_linux/yoctotutor/viyara-imx-uboot/board/sita/sita-6ull-14x14$ vim Makefile 
+
+obj-y  := sita-6ull-14x14.o
+
+
+
+############################ modify the arch/arm/mach-imx/imx6/  Kconfig file ##############################
+step 7: anil@anil-Inspiron-3501:~/embedded_linux/yoctotutor/viyara-imx-uboot/arch/arm/mach-imx/mx6$ vim Kconfig 
+
+
+config TARGET_SITA_6ULL_14X14
+        bool "Support sita_6ull_14x14"
+        select BOARD_LATE_INIT
+        select DM
+        select DM_THERMAL
+        select MX6ULL
+        imply CMD_DM
+source "board/myir/mys-6ull-14x14/Kconfig"
+source "board/sita/sita-6ull-14x14/Kconfig"
+
+
+######################################## modify the device tree (dts) file ##########################
+step 8: 
+
+anil@anil-Inspiron-3501:~/embedded_linux/yoctotutor/viyara-imx-uboot/arch/arm/dts$ vim sita-6ull-14x14.dts 
+
+REF : anil@anil-Inspiron-3501:~/embedded_linux/yoctotutor/viyara-imx-uboot/arch/arm/dts$ vim mys-6ull-14x14.dts 
+
+############################ modify the dts Makefile ################################
+anil@anil-Inspiron-3501:~/embedded_linux/yoctotutor/viyara-imx-uboot/arch/arm/dts$ vim Makefile 
+
+  mys-6ull-14x14-gpmi-weim.dtb \
+  sita-6ull-14x14-gpmi-weim.dtb \
+
+
+################################ modify the header file ################################################
+step 9:
+
+anil@anil-Inspiron-3501:~/embedded_linux/yoctotutor/viyara-imx-uboot/include/configs$ vim sita-6ull-14x14.h 
+
+REF :  anil@anil-Inspiron-3501:~/embedded_linux/yoctotutor/viyara-imx-uboot/include/configs$ vim mys-6ull-14x14.h 
+
+############################### create your ow defconfig file #########################################
+
+step 10: anil@anil-Inspiron-3501:~/embedded_linux/yoctotutor/viyara-imx-uboot/configs$ vim sita_imx6ull_nand_ddr256_defconfig 
+
+###################### modification in defconfig #######################################
+
+CONFIG_ARCH_MX6=y
+CONFIG_TARGET_SITA_6ULL_14X14=y
+CONFIG_ENV_SIZE=0x20000
+CONFIG_ENV_OFFSET=0x3c00000
+CONFIG_DM_GPIO=y
+CONFIG_NR_DRAM_BANKS=1
+CONFIG_SYS_EXTRA_OPTIONS="IMX_CONFIG=board/sita/sita-6ull-14x14/imximage.cfg,DDR_MB=256"
+ 
+########################### modfiy the device tree #####################
+ 
+CONFIG_DEFAULT_DEVICE_TREE="sita-6ull-14x14-gpmi-weim"
+
+
+REF : anil@anil-Inspiron-3501:~/embedded_linux/yoctotutor/viyara-imx-uboot/configs$ vim mys_imx6ull_nand_ddr256_defconfig 
+
+
+ 
+
